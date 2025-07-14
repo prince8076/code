@@ -11,14 +11,27 @@ def generate_number(n):
         for j in delimiters:
             if j in i:
                 try:
-                    start_str, end_str = i.split(j)
-                    start, end = int(start_str), int(end_str)
-                    if start<=end:
-                        step=1
+                    if ':' in i:
+                        range_part,step_str = i.split(':')
+                        step=int(step_str)
                     else:
-                       step= -1
+                        range_part=i
+                        step = None
+                    start_str, end_str = range_part.split(j)
+                    start, end = int(start_str), int(end_str)
+                    if start is None:
+                        if start<=end:
+                            step=1
+                        else:
+                            step= -1
+                    elif start> end and step >0:
+                        step=-step
+                    if step > 0:
+                        stop = end + 1
+                    else:
+                        stop = end - 1
 
-                    result.extend(range(start, end + step,step))
+                    result.extend(range(start,stop,step))
                     matched=True
                     break
                 except ValueError:
