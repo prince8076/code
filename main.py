@@ -1,5 +1,6 @@
 def generate_number(n):
     result = []
+    seen=set()
     delimiters = ['-','..','to','~']
     parts = n.split(',')
     for i in parts:
@@ -19,7 +20,7 @@ def generate_number(n):
                         step = None
                     start_str, end_str = range_part.split(j)
                     start, end = int(start_str), int(end_str)
-                    if start is None:
+                    if step is None:
                         if start<=end:
                             step=1
                         else:
@@ -30,8 +31,10 @@ def generate_number(n):
                         stop = end + 1
                     else:
                         stop = end - 1
-
-                    result.extend(range(start,stop,step))
+                    for k in range(start,stop,step):
+                        if k not in seen:
+                            result.append(k)
+                            seen.add(k)
                     matched=True
                     break
                 except ValueError:
@@ -39,7 +42,10 @@ def generate_number(n):
 
         if not matched:
             try:
-                result.append(int(i))
+                num =int(i)
+                if num not in seen:
+                    result.append(int(num))
+                    seen.add(num)
             except ValueError:
                 raise ValueError(f"Invalid range: '{i}'")
     return result
