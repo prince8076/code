@@ -1,4 +1,4 @@
-def generate_number(n):
+def generate_number(n,output_format='list'):
     result = []
     seen=set()
     delimiters = ['-','..','to','~']
@@ -48,11 +48,17 @@ def generate_number(n):
                     seen.add(num)
             except ValueError:
                 raise ValueError(f"Invalid range: '{i}'")
+
+    if output_format == "csv":
+        return '"' + ",".join(str(n) for n in result) + '"'
+    elif output_format == "set":
+        return "{" + ", ".join(str(n) for n in result) + "}"
     return result
 
 try:
     user_input = input("Enter range = ")
-    print(generate_number(user_input))
+    output_format= input("choose output format(list / csv / set):").strip().lower()
+    print(generate_number(user_input,output_format))
 
 except ValueError as e:
     print(f"Error: {e}")
